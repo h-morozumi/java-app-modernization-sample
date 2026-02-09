@@ -24,7 +24,6 @@ replay_pid*
 .project
 .classpath
 .settings/
-.vscode/
 *.swp
 *~
 .factorypath

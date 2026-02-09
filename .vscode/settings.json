@@ -1,0 +1,6 @@
+{
+  "files.exclude": {
+    "javaee-legacy-app/": true,
+    "spring-legacy-app/": true
+  }
+}

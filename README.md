@@ -32,6 +32,31 @@
 
 このリポジトリには Dev Container 設定が含まれています。VS Code の **Dev Containers** 拡張機能を使うと、必要な SDK がすべて自動インストールされます。
 
+### マルチルートワークスペースの使用 (推奨)
+
+このリポジトリは **マルチルートワークスペース** として構成されています。`java-app-modernization.code-workspace` を開くと、各アプリケーションが独立したフォルダとして認識され、以下のメリットがあります：
+
+- 各アプリごとに個別のビルド設定・デバッグ設定が適用される
+- GitHub Copilot App Modernization が各アプリを独立したプロジェクトとして認識
+- フォルダごとに適切な Java/Maven バージョンが自動切替
+
+**ワークスペースを開く方法:**
+
+```bash
+# VS Code でワークスペースファイルを直接開く
+code java-app-modernization.code-workspace
+```
+
+または、VS Code メニューから **ファイル** → **ファイルでワークスペースを開く** を選択し、`java-app-modernization.code-workspace` を選択してください。
+
+**ワークスペース構成:**
+
+| フォルダ名 | パス | 説明 |
+|-----------|------|------|
+| root | `.` | プロジェクトルート (共通設定・ドキュメント) |
+| javaee-legacy-app (Java 8 → 21) | `javaee-legacy-app/` | Java EE レガシーアプリ |
+| spring-legacy-app (Boot 2 → 3) | `spring-legacy-app/` | Spring Boot レガシーアプリ |
+
 ```bash
 # Dev Container の起動後、SDKMAN で以下が自動インストールされます:
 # Java:  8.0.472-amzn / 11.0.26-amzn / 21.0.9-amzn
@@ -53,6 +78,7 @@
 ```
 java-app-modernization-sample/
 ├── .sdkmanrc                          # Java 21 / Maven 3.9.12 自動切替 (ツール実行用)
+├── java-app-modernization.code-workspace  # マルチルートワークスペース設定
 ├── README.md                          # ← このファイル (ハンズオン手順)
 ├── .devcontainer/
 │   ├── devcontainer.json              # Dev Container 設定

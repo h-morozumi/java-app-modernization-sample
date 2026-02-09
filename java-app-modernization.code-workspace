@@ -1,0 +1,17 @@
+{
+	"folders": [
+		{
+			"path": ".",
+			"name": "root"
+		},
+		{
+			"path": "javaee-legacy-app",
+			"name": "javaee-legacy-app (Java 8 → 21)"
+		},
+		{
+			"path": "spring-legacy-app",
+			"name": "spring-legacy-app (Boot 2 → 3)"
+		}
+	],
+	"settings": {}
+}
