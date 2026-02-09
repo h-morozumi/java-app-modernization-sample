@@ -1,0 +1,75 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <title>System Info - Spring Legacy App</title>
+    <style>
+        body { font-family: Arial, sans-serif; margin: 40px; background: #f5f5f5; }
+        .container { max-width: 900px; margin: 0 auto; background: white; padding: 30px; border-radius: 8px; box-shadow: 0 2px 4px rgba(0,0,0,0.1); }
+        h1 { color: #6db33f; }
+        h2 { color: #555; border-bottom: 1px solid #eee; padding-bottom: 8px; }
+        pre { background: #f8f8f8; padding: 15px; border-radius: 4px; overflow-x: auto; white-space: pre-wrap; line-height: 1.6; }
+        .warn { color: #e65100; }
+        a { color: #007bff; text-decoration: none; }
+        a:hover { text-decoration: underline; }
+        table { border-collapse: collapse; width: 100%; margin: 15px 0; }
+        th, td { border: 1px solid #ddd; padding: 10px; text-align: left; }
+        th { background: #f8f8f8; }
+        .badge { display: inline-block; padding: 3px 8px; border-radius: 4px; font-size: 12px; color: white; }
+        .badge-danger { background: #dc3545; }
+    </style>
+</head>
+<body>
+<div class="container">
+    <h1>&#128295; System Info &amp; Migration Issues</h1>
+
+    <h2>Runtime Info</h2>
+    <pre th:text="${runtimeInfo}"></pre>
+
+    <h2>javax.servlet (&#8594; jakarta.servlet in Boot 3)</h2>
+    <pre th:text="${servletResult}"></pre>
+    <p class="warn">&#9888; javax.servlet.* is REMOVED in Spring Boot 3 &#8594; use jakarta.servlet.*</p>
+
+    <h2>javax.persistence (&#8594; jakarta.persistence in Boot 3)</h2>
+    <pre th:text="${jpaResult}"></pre>
+    <p class="warn">&#9888; javax.persistence.* is REMOVED in Spring Boot 3 &#8594; use jakarta.persistence.*</p>
+
+    <h2>javax.validation (&#8594; jakarta.validation in Boot 3)</h2>
+    <pre th:text="${validationResult}"></pre>
+    <p class="warn">&#9888; javax.validation.* is REMOVED in Spring Boot 3 &#8594; use jakarta.validation.*</p>
+
+    <h2>Commons Text (CVE-2022-42889)</h2>
+    <pre th:text="${commonsTextResult}"></pre>
+
+    <h2>Trailing Slash Matching</h2>
+    <pre th:text="${trailingSlashResult}"></pre>
+
+    <h2>CVE Vulnerable Libraries</h2>
+    <table>
+        <tr><th>Library</th><th>Version</th><th>CVE</th><th>Description</th></tr>
+        <tr th:each="lib : ${cveLibraries}">
+            <td th:text="${lib['name']}"></td>
+            <td th:text="${lib['version']}"></td>
+            <td><span class="badge badge-danger" th:text="${lib['cve']}"></span></td>
+            <td th:text="${lib['description']}"></td>
+        </tr>
+    </table>
+
+    <h2>Spring Boot 2 &#8594; 3 Migration Checklist</h2>
+    <table>
+        <tr><th>Item</th><th>Status</th><th>Details</th></tr>
+        <tr><td>Java 11 &#8594; 17+</td><td>&#9888; Required</td><td>Spring Boot 3 requires Java 17 minimum</td></tr>
+        <tr><td>javax.* &#8594; jakarta.*</td><td>&#9888; Required</td><td>servlet, persistence, validation, annotation</td></tr>
+        <tr><td>WebSecurityConfigurerAdapter</td><td>&#9888; Removed</td><td>Use SecurityFilterChain @Bean</td></tr>
+        <tr><td>WebMvcConfigurerAdapter</td><td>&#9888; Removed</td><td>Implement WebMvcConfigurer</td></tr>
+        <tr><td>antMatchers()</td><td>&#9888; Removed</td><td>Use requestMatchers()</td></tr>
+        <tr><td>authorizeRequests()</td><td>&#9888; Deprecated</td><td>Use authorizeHttpRequests()</td></tr>
+        <tr><td>spring.factories</td><td>&#9888; Removed</td><td>Use AutoConfiguration.imports</td></tr>
+        <tr><td>Trailing slash matching</td><td>&#9888; Changed</td><td>Disabled by default in Boot 3</td></tr>
+        <tr><td>Property names</td><td>&#9888; Changed</td><td>spring.redis.* &#8594; spring.data.redis.*</td></tr>
+    </table>
+
+    <p><a href="/">&#8592; Back to Top</a></p>
+</div>
+</body>
+</html>

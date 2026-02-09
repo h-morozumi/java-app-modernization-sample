@@ -1,0 +1,8 @@
+# ⚠ Migration Issue (Spring Boot 3):
+#   - META-INF/spring.factories for auto-configuration is REMOVED
+#   - Must use: META-INF/spring/org.springframework.boot.autoconfigure.AutoConfiguration.imports
+#   - One fully-qualified class name per line (no key=value format)
+#   - Class should be annotated with @AutoConfiguration instead of @Configuration
+
+org.springframework.boot.autoconfigure.EnableAutoConfiguration=\
+com.example.legacy.config.LegacyLoggingAutoConfiguration

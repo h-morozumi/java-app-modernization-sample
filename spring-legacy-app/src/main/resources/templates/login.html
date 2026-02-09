@@ -1,0 +1,49 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <title>Login - Spring Legacy App</title>
+    <style>
+        body { font-family: Arial, sans-serif; margin: 0; background: #f5f5f5; display: flex; justify-content: center; align-items: center; min-height: 100vh; }
+        .login-box { background: white; padding: 40px; border-radius: 8px; box-shadow: 0 2px 4px rgba(0,0,0,0.1); width: 350px; }
+        h1 { color: #6db33f; text-align: center; margin-bottom: 30px; }
+        .form-group { margin-bottom: 16px; }
+        .form-group label { display: block; margin-bottom: 4px; font-weight: bold; color: #555; }
+        .form-group input { width: 100%; padding: 10px; border: 1px solid #ccc; border-radius: 4px; box-sizing: border-box; font-size: 14px; }
+        .btn-login { width: 100%; padding: 12px; background: #6db33f; color: white; border: none; border-radius: 4px; cursor: pointer; font-size: 16px; }
+        .btn-login:hover { background: #5a9e2f; }
+        .error { background: #f8d7da; color: #721c24; padding: 10px; border-radius: 4px; margin-bottom: 15px; text-align: center; }
+        .info { background: #d1ecf1; color: #0c5460; padding: 10px; border-radius: 4px; margin-bottom: 15px; text-align: center; }
+        .back { text-align: center; margin-top: 15px; }
+        .back a { color: #007bff; text-decoration: none; }
+    </style>
+</head>
+<body>
+<div class="login-box">
+    <h1>&#127811; Login</h1>
+
+    <div th:if="${param.error}" class="error">
+        Invalid username or password.
+    </div>
+    <div th:if="${param.logout}" class="info">
+        You have been logged out.
+    </div>
+
+    <form th:action="@{/login}" method="post">
+        <div class="form-group">
+            <label for="username">Username:</label>
+            <input type="text" id="username" name="username" placeholder="user or admin" autofocus/>
+        </div>
+        <div class="form-group">
+            <label for="password">Password:</label>
+            <input type="password" id="password" name="password" placeholder="password"/>
+        </div>
+        <button type="submit" class="btn-login">Sign In</button>
+    </form>
+
+    <div class="back">
+        <a href="/">&#8592; Back to Top</a>
+    </div>
+</div>
+</body>
+</html>

@@ -11,8 +11,10 @@ sed -i 's/sdkman_auto_answer=false/sdkman_auto_answer=true/' "$HOME/.sdkman/etc/
 
 # Install Java versions
 sdk install java 8.0.472-amzn
+sdk install java 11.0.26-amzn
 sdk install java 21.0.9-amzn
 
 # Install Maven versions
 sdk install maven 3.6.3
+sdk install maven 3.8.8
 sdk install maven 3.9.12

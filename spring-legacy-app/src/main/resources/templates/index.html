@@ -1,0 +1,71 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <title>Spring Legacy App</title>
+    <style>
+        body { font-family: Arial, sans-serif; margin: 40px; background: #f5f5f5; }
+        .container { max-width: 900px; margin: 0 auto; background: white; padding: 30px; border-radius: 8px; box-shadow: 0 2px 4px rgba(0,0,0,0.1); }
+        h1 { color: #6db33f; }
+        h2 { color: #555; border-bottom: 1px solid #eee; padding-bottom: 8px; }
+        a { color: #007bff; text-decoration: none; }
+        a:hover { text-decoration: underline; }
+        table { border-collapse: collapse; width: 100%; margin: 15px 0; }
+        th, td { border: 1px solid #ddd; padding: 10px; text-align: left; }
+        th { background: #f8f8f8; }
+        .badge { display: inline-block; padding: 3px 8px; border-radius: 4px; font-size: 12px; color: white; }
+        .badge-danger { background: #dc3545; }
+        .badge-warn { background: #ffc107; color: #333; }
+        .badge-info { background: #17a2b8; }
+        .nav { list-style: none; padding: 0; }
+        .nav li { display: inline-block; margin-right: 20px; margin-bottom: 10px; }
+        .nav a { font-size: 16px; padding: 8px 16px; background: #f0f0f0; border-radius: 4px; }
+        .nav a:hover { background: #e0e0e0; }
+    </style>
+</head>
+<body>
+<div class="container">
+    <h1>&#127811; Spring Legacy App</h1>
+    <p>
+        Spring Boot <span th:text="${bootVersion}" class="badge badge-info">2.7.x</span>
+        / Java <span th:text="${javaVersion}" class="badge badge-info">11</span>
+    </p>
+
+    <h2>&#128203; Navigation</h2>
+    <ul class="nav">
+        <li><a href="/users">&#128101; Users (Thymeleaf)</a></li>
+        <li><a href="/api/users">&#128225; Users API (JSON)</a></li>
+        <li><a href="/sysinfo">&#128295; System Info &amp; Migration Issues</a></li>
+        <li><a href="/login">&#128274; Login</a></li>
+        <li><a href="/actuator/health">&#128154; Health Check</a></li>
+        <li><a href="/actuator/info">&#8505; App Info</a></li>
+        <li><a href="/h2-console">&#128451; H2 Console</a></li>
+    </ul>
+
+    <h2>&#9888; CVE Vulnerable Libraries</h2>
+    <table>
+        <tr><th>Library</th><th>Version</th><th>CVE</th><th>Description</th></tr>
+        <tr><td>SnakeYAML</td><td>1.30</td><td><span class="badge badge-danger">CVE-2022-1471</span></td><td>Unsafe deserialization</td></tr>
+        <tr><td>H2 Database</td><td>2.1.210</td><td><span class="badge badge-danger">CVE-2022-23221</span></td><td>RCE via JDBC URL</td></tr>
+        <tr><td>Log4j 1.x</td><td>1.2.17</td><td><span class="badge badge-danger">CVE-2021-4104</span></td><td>JMSAppender deserialization</td></tr>
+        <tr><td>Commons Text</td><td>1.9</td><td><span class="badge badge-danger">CVE-2022-42889</span></td><td>Text4Shell - script injection</td></tr>
+        <tr><td>Gson</td><td>2.8.6</td><td><span class="badge badge-danger">CVE-2022-25647</span></td><td>Deserialization DoS</td></tr>
+        <tr><td>Apache HttpClient</td><td>4.5.2</td><td><span class="badge badge-danger">CVE-2020-13956</span></td><td>Request smuggling</td></tr>
+    </table>
+
+    <h2>&#128260; Spring Boot 2 &#8594; 3 Migration Issues</h2>
+    <table>
+        <tr><th>Category</th><th>Boot 2 (Current)</th><th>Boot 3 (Target)</th></tr>
+        <tr><td>Java Version</td><td>11</td><td>17+ (required)</td></tr>
+        <tr><td>Namespace</td><td>javax.*</td><td>jakarta.*</td></tr>
+        <tr><td>Security Config</td><td>WebSecurityConfigurerAdapter</td><td>SecurityFilterChain Bean</td></tr>
+        <tr><td>URL Matching</td><td>antMatchers()</td><td>requestMatchers()</td></tr>
+        <tr><td>Authorization</td><td>authorizeRequests()</td><td>authorizeHttpRequests()</td></tr>
+        <tr><td>Trailing Slash</td><td>Matches by default</td><td>Does NOT match</td></tr>
+        <tr><td>MVC Config</td><td>WebMvcConfigurerAdapter</td><td>WebMvcConfigurer (interface)</td></tr>
+        <tr><td>Auto-Config</td><td>META-INF/spring.factories</td><td>AutoConfiguration.imports</td></tr>
+        <tr><td>Properties</td><td>spring.redis.*</td><td>spring.data.redis.*</td></tr>
+    </table>
+</div>
+</body>
+</html>
