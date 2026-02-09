@@ -38,7 +38,13 @@
 # Maven: 3.6.3 / 3.8.8 / 3.9.12
 ```
 
-各アプリディレクトリに `.sdkmanrc` が配置されており、`cd` するだけで適切な Java/Maven バージョンに自動切替されます。
+各ディレクトリに `.sdkmanrc` が配置されており、`cd` するだけで適切な Java/Maven バージョンに自動切替されます。
+
+| ディレクトリ | Java | Maven | 用途 |
+|------------|------|-------|------|
+| `/` (プロジェクトルート) | 21.0.9-amzn | 3.9.12 | ツール実行 / マイグレーション先 |
+| `javaee-legacy-app/` | 8.0.472-amzn | 3.6.3 | レガシーアプリ① |
+| `spring-legacy-app/` | 11.0.26-amzn | 3.8.8 | レガシーアプリ② |
 
 ---
 
@@ -46,6 +52,7 @@
 
 ```
 java-app-modernization-sample/
+├── .sdkmanrc                          # Java 21 / Maven 3.9.12 自動切替 (ツール実行用)
 ├── README.md                          # ← このファイル (ハンズオン手順)
 ├── .devcontainer/
 │   ├── devcontainer.json              # Dev Container 設定
