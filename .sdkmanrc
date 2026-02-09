@@ -1,0 +1,4 @@
+# Enable auto-env to automatically switch SDK versions
+# This is the target JDK for running GitHub Copilot App Modernization tools
+java=21.0.9-amzn
+maven=3.9.12
