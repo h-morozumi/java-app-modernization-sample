@@ -54,18 +54,25 @@ public class XmlUtil {
 
     /**
      * Marshal object to XML string using JAXB (removed in Java 11).
+     * Uses context classloader trick to access JDK-internal JAXB in embedded Tomcat.
      */
     public static String toXml(Object obj) throws JAXBException {
-        JAXBContext context = JAXBContext.newInstance(obj.getClass());
-        Marshaller marshaller = context.createMarshaller();
-        marshaller.setProperty(Marshaller.JAXB_FORMATTED_OUTPUT, Boolean.TRUE);
+        ClassLoader original = Thread.currentThread().getContextClassLoader();
+        try {
+            Thread.currentThread().setContextClassLoader(ClassLoader.getSystemClassLoader());
+            JAXBContext context = JAXBContext.newInstance(obj.getClass());
+            Marshaller marshaller = context.createMarshaller();
+            marshaller.setProperty(Marshaller.JAXB_FORMATTED_OUTPUT, Boolean.TRUE);
 
-        StringWriter writer = new StringWriter();
-        marshaller.marshal(obj, writer);
+            StringWriter writer = new StringWriter();
+            marshaller.marshal(obj, writer);
 
-        String xml = writer.toString();
-        logger.debug("Marshalled object to XML: " + xml.length() + " chars");
-        return xml;
+            String xml = writer.toString();
+            logger.debug("Marshalled object to XML: " + xml.length() + " chars");
+            return xml;
+        } finally {
+            Thread.currentThread().setContextClassLoader(original);
+        }
     }
 
     /**
@@ -73,13 +80,19 @@ public class XmlUtil {
      */
     @SuppressWarnings("unchecked")
     public static <T> T fromXml(String xml, Class<T> clazz) throws JAXBException {
-        JAXBContext context = JAXBContext.newInstance(clazz);
-        Unmarshaller unmarshaller = context.createUnmarshaller();
+        ClassLoader original = Thread.currentThread().getContextClassLoader();
+        try {
+            Thread.currentThread().setContextClassLoader(ClassLoader.getSystemClassLoader());
+            JAXBContext context = JAXBContext.newInstance(clazz);
+            Unmarshaller unmarshaller = context.createUnmarshaller();
 
-        StringReader reader = new StringReader(xml);
-        T obj = (T) unmarshaller.unmarshal(reader);
-        logger.debug("Unmarshalled XML to " + clazz.getSimpleName());
-        return obj;
+            StringReader reader = new StringReader(xml);
+            T obj = (T) unmarshaller.unmarshal(reader);
+            logger.debug("Unmarshalled XML to " + clazz.getSimpleName());
+            return obj;
+        } finally {
+            Thread.currentThread().setContextClassLoader(original);
+        }
     }
 
     /**

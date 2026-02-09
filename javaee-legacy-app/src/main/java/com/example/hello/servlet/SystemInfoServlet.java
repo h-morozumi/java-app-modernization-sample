@@ -54,8 +54,9 @@ public class SystemInfoServlet extends HttpServlet {
             String decoded = EncodingUtil.decodeString(encoded);
             out.println("<pre>Original: Hello, Java 8!\nEncoded:  " + encoded + "\nDecoded:  " + decoded + "</pre>");
             out.println("<p class='warn'>&#9888; Uses sun.misc.BASE64Encoder/Decoder (removed in Java 11)</p>");
-        } catch (Exception e) {
-            out.println("<p class='err'>Error: " + e.getMessage() + "</p>");
+        } catch (Throwable e) {
+            out.println("<p class='err'>&#10060; " + e.getClass().getName() + ": " + e.getMessage() + "</p>");
+            out.println("<p class='warn'>&#9888; sun.misc.BASE64Encoder/Decoder is not accessible in this environment</p>");
         }
 
         // --- JAXB (removed in Java 11) ---
@@ -68,8 +69,8 @@ public class SystemInfoServlet extends HttpServlet {
             String hex = XmlUtil.bytesToHex("Hello".getBytes());
             out.println("<pre>Hex: " + hex + "</pre>");
             out.println("<p class='warn'>&#9888; Uses javax.xml.bind (JAXB) - removed in Java 11 (JEP 320)</p>");
-        } catch (Exception e) {
-            out.println("<p class='err'>Error: " + e.getMessage() + "</p>");
+        } catch (Throwable e) {
+            out.println("<p class='err'>&#10060; " + e.getClass().getName() + ": " + e.getMessage() + "</p>");
         }
 
         // --- Nashorn (removed in Java 15) ---
@@ -78,25 +79,33 @@ public class SystemInfoServlet extends HttpServlet {
             Object result = ScriptUtil.evaluateJs("1 + 2 * 3");
             out.println("<pre>Expression: 1 + 2 * 3 = " + result + "</pre>");
             out.println("<p class='warn'>&#9888; Uses Nashorn JavaScript engine (removed in Java 15, JEP 372)</p>");
-        } catch (Exception e) {
-            out.println("<p class='err'>Nashorn not available: " + e.getMessage() + "</p>");
+        } catch (Throwable e) {
+            out.println("<p class='err'>&#10060; Nashorn not available: " + e.getMessage() + "</p>");
         }
 
         // --- Deprecated wrapper constructors (removed in Java 16) ---
         out.println("<h2>Deprecated Wrapper Constructors</h2>");
-        Integer days = DateUtil.daysBetween(new Date(0), new Date());
-        Double hours = DateUtil.millisToHours(System.currentTimeMillis());
-        Boolean valid = DateUtil.isValidDate("2025-01-01");
-        out.println("<pre>Days since epoch: " + days + "\nHours since epoch: "
-                + String.format("%.1f", hours) + "\nIs '2025-01-01' valid: " + valid + "</pre>");
-        out.println("<p class='warn'>&#9888; Uses new Integer(), new Double(), new Boolean() (removed in Java 16+)</p>");
+        try {
+            Integer days = DateUtil.daysBetween(new Date(0), new Date());
+            Double hours = DateUtil.millisToHours(System.currentTimeMillis());
+            Boolean valid = DateUtil.isValidDate("2025-01-01");
+            out.println("<pre>Days since epoch: " + days + "\nHours since epoch: "
+                    + String.format("%.1f", hours) + "\nIs '2025-01-01' valid: " + valid + "</pre>");
+            out.println("<p class='warn'>&#9888; Uses new Integer(), new Double(), new Boolean() (removed in Java 16+)</p>");
+        } catch (Throwable e) {
+            out.println("<p class='err'>&#10060; " + e.getClass().getName() + ": " + e.getMessage() + "</p>");
+        }
 
         // --- SecurityManager (removed in Java 24) ---
         out.println("<h2>SecurityManager</h2>");
-        boolean smEnabled = SecurityUtil.isSecurityManagerEnabled();
-        boolean canRead = SecurityUtil.canReadFile("/etc/passwd");
-        out.println("<pre>SecurityManager enabled: " + smEnabled + "\nCan read /etc/passwd: " + canRead + "</pre>");
-        out.println("<p class='warn'>&#9888; Uses SecurityManager (removed in Java 24, JEP 486)</p>");
+        try {
+            boolean smEnabled = SecurityUtil.isSecurityManagerEnabled();
+            boolean canRead = SecurityUtil.canReadFile("/etc/passwd");
+            out.println("<pre>SecurityManager enabled: " + smEnabled + "\nCan read /etc/passwd: " + canRead + "</pre>");
+            out.println("<p class='warn'>&#9888; Uses SecurityManager (removed in Java 24, JEP 486)</p>");
+        } catch (Throwable e) {
+            out.println("<p class='err'>&#10060; " + e.getClass().getName() + ": " + e.getMessage() + "</p>");
+        }
 
         // --- Date/Time info ---
         out.println("<h2>Date Utilities (java.util.Date + SimpleDateFormat)</h2>");

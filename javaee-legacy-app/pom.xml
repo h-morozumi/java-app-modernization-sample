@@ -5,11 +5,11 @@
     <modelVersion>4.0.0</modelVersion>
 
     <groupId>com.example</groupId>
-    <artifactId>java-hello</artifactId>
+    <artifactId>javaee-legacy-app</artifactId>
     <version>1.0-SNAPSHOT</version>
     <packaging>war</packaging>
 
-    <name>Java Hello - Legacy JavaEE Web App</name>
+    <name>JavaEE Legacy App</name>
     <description>A legacy Java EE web application for migration hands-on</description>
 
     <properties>
@@ -102,10 +102,11 @@
             <artifactId>gson</artifactId>
             <version>2.8.0</version>
         </dependency>
+
     </dependencies>
 
     <build>
-        <finalName>java-hello</finalName>
+        <finalName>javaee-legacy-app</finalName>
         <plugins>
             <plugin>
                 <groupId>org.apache.maven.plugins</groupId>
@@ -120,6 +121,17 @@
                 <groupId>org.apache.maven.plugins</groupId>
                 <artifactId>maven-war-plugin</artifactId>
                 <version>3.2.3</version>
+            </plugin>
+            <!-- Embedded Tomcat: mvn tomcat7:run -->
+            <plugin>
+                <groupId>org.apache.tomcat.maven</groupId>
+                <artifactId>tomcat7-maven-plugin</artifactId>
+                <version>2.2</version>
+                <configuration>
+                    <port>8080</port>
+                    <path>/</path>
+                    <delegate>true</delegate>
+                </configuration>
             </plugin>
         </plugins>
     </build>

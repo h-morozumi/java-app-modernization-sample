@@ -15,7 +15,8 @@ public class ScriptUtil {
 
     private static final Logger logger = Logger.getLogger(ScriptUtil.class);
 
-    private static final ScriptEngineManager manager = new ScriptEngineManager();
+    // Use system classloader to ensure Nashorn is visible in embedded Tomcat
+    private static final ScriptEngineManager manager = new ScriptEngineManager(ClassLoader.getSystemClassLoader());
 
     /**
      * Evaluate a JavaScript expression using Nashorn (removed in Java 15).
