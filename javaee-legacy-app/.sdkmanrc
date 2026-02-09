@@ -1,0 +1,3 @@
+# Enable auto-env to automatically switch versions when entering this directory
+java=8.0.472-amzn
+maven=3.6.3
