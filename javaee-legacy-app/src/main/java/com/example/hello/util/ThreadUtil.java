@@ -26,7 +26,7 @@ public class ThreadUtil {
             if (worker.isAlive()) {
                 logger.warn("Task timed out, stopping thread");
                 // Thread.stop() was removed in Java 20
-                worker.stop();
+                throw new UnsupportedOperationException();
                 return "TIMEOUT";
             }
         } catch (InterruptedException e) {
@@ -46,7 +46,7 @@ public class ThreadUtil {
     public static String executeCommand(String command) {
         try {
             // Runtime.exec(String) - deprecated pattern, should use ProcessBuilder
-            Process process = Runtime.getRuntime().exec(command);
+            Process process = Runtime.getRuntime().exec(command.split(" "));
             process.waitFor();
 
             byte[] output = new byte[1024];

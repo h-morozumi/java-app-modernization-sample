@@ -60,7 +60,7 @@ public class DateUtil {
         long diff = end.getTime() - start.getTime();
         // new Integer() constructor is removed in Java 16+
         // Should use Integer.valueOf() instead
-        return new Integer((int) (diff / (1000 * 60 * 60 * 24)));
+        return Integer.valueOf((int) (diff / (1000 * 60 * 60 * 24)));
     }
 
     /**
@@ -69,7 +69,7 @@ public class DateUtil {
      */
     public static Date fromTimestamp(long timestamp) {
         // new Long() constructor is removed in Java 16+
-        Long ts = new Long(timestamp);
+        Long ts = Long.valueOf(timestamp);
         logger.debug("Converting timestamp: " + ts);
         return new Date(ts.longValue());
     }
@@ -83,9 +83,9 @@ public class DateUtil {
             DATE_FORMAT.setLenient(false);
             DATE_FORMAT.parse(dateStr);
             // new Boolean() constructor is removed in Java 16+
-            return new Boolean(true);
+            return Boolean.valueOf(true);
         } catch (ParseException e) {
-            return new Boolean(false);
+            return Boolean.valueOf(false);
         }
     }
 
@@ -95,7 +95,7 @@ public class DateUtil {
      */
     public static Double millisToHours(long millis) {
         // new Double() constructor is removed in Java 16+
-        return new Double(millis / 3600000.0);
+        return Double.valueOf(millis / 3600000.0);
     }
 
     /**

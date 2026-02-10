@@ -90,7 +90,7 @@ public class SystemInfoServlet extends HttpServlet {
             Double hours = DateUtil.millisToHours(System.currentTimeMillis());
             Boolean valid = DateUtil.isValidDate("2025-01-01");
             out.println("<pre>Days since epoch: " + days + "\nHours since epoch: "
-                    + String.format("%.1f", hours) + "\nIs '2025-01-01' valid: " + valid + "</pre>");
+                    + "%.1f".formatted(hours) + "\nIs '2025-01-01' valid: " + valid + "</pre>");
             out.println("<p class='warn'>&#9888; Uses new Integer(), new Double(), new Boolean() (removed in Java 16+)</p>");
         } catch (Throwable e) {
             out.println("<p class='err'>&#10060; " + e.getClass().getName() + ": " + e.getMessage() + "</p>");

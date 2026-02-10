@@ -40,8 +40,8 @@ public class ScriptUtil {
      */
     public static double evaluateMath(String expression) throws ScriptException {
         Object result = evaluateJs(expression);
-        if (result instanceof Number) {
-            return ((Number) result).doubleValue();
+        if (result instanceof Number number) {
+            return number.doubleValue();
         }
         throw new ScriptException("Result is not a number: " + result);
     }
