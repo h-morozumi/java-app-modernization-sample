@@ -27,7 +27,6 @@ public class ThreadUtil {
                 logger.warn("Task timed out, stopping thread");
                 // Thread.stop() was removed in Java 20
                 throw new UnsupportedOperationException();
-                return "TIMEOUT";
             }
         } catch (InterruptedException e) {
             logger.error("Interrupted", e);
