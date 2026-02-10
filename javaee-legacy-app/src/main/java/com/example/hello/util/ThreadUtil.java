@@ -1,6 +1,7 @@
 package com.example.hello.util;
 
-import org.apache.log4j.Logger;
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
 
 /**
  * Thread utility demonstrating deprecated/removed Thread methods.
@@ -12,7 +13,7 @@ import org.apache.log4j.Logger;
  */
 public class ThreadUtil {
 
-    private static final Logger logger = Logger.getLogger(ThreadUtil.class);
+    private static final Logger logger = LogManager.getLogger(ThreadUtil.class);
 
     /**
      * Starts a background task with a timeout using Thread.stop() (removed in Java 20).

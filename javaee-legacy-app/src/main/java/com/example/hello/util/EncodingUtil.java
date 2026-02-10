@@ -1,46 +1,33 @@
 package com.example.hello.util;
 
-import org.apache.log4j.Logger;
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
 
-import java.io.IOException;
-import java.lang.reflect.Method;
+import java.util.Base64;
 
 /**
- * Encoding utility using sun.misc.BASE64Encoder/Decoder via reflection.
- * These internal APIs were removed in Java 11+.
- * Should be migrated to java.util.Base64.
- *
- * Reflection is used to bypass webapp classloader restrictions in embedded Tomcat,
- * while still exercising the actual sun.misc classes from the JDK.
+ * Encoding utility using java.util.Base64 (modern replacement for sun.misc.BASE64Encoder).
+ * sun.misc.BASE64Encoder/Decoder were removed in Java 11+.
+ * Migrated to java.util.Base64 (available since Java 8).
  */
 public class EncodingUtil {
 
-    private static final Logger logger = Logger.getLogger(EncodingUtil.class);
+    private static final Logger logger = LogManager.getLogger(EncodingUtil.class);
 
     /**
-     * Encode bytes to Base64 string using sun.misc.BASE64Encoder (removed in Java 11).
-     * Loaded via system classloader to work in embedded Tomcat.
+     * Encode bytes to Base64 string using java.util.Base64.
      */
-    public static String encodeBase64(byte[] data) throws Exception {
-        // sun.misc.BASE64Encoder - removed in Java 11
-        Class<?> encoderClass = ClassLoader.getSystemClassLoader().loadClass("sun.misc.BASE64Encoder");
-        Object encoder = encoderClass.newInstance();
-        Method encodeMethod = encoderClass.getMethod("encode", byte[].class);
-        String encoded = (String) encodeMethod.invoke(encoder, data);
+    public static String encodeBase64(byte[] data) {
+        String encoded = Base64.getEncoder().encodeToString(data);
         logger.debug("Encoded " + data.length + " bytes to Base64");
         return encoded;
     }
 
     /**
-     * Decode Base64 string to bytes using sun.misc.BASE64Decoder (removed in Java 11).
-     * Loaded via system classloader to work in embedded Tomcat.
+     * Decode Base64 string to bytes using java.util.Base64.
      */
-    public static byte[] decodeBase64(String data) throws Exception {
-        // sun.misc.BASE64Decoder - removed in Java 11
-        Class<?> decoderClass = ClassLoader.getSystemClassLoader().loadClass("sun.misc.BASE64Decoder");
-        Object decoder = decoderClass.newInstance();
-        Method decodeMethod = decoderClass.getMethod("decodeBuffer", String.class);
-        byte[] decoded = (byte[]) decodeMethod.invoke(decoder, data);
+    public static byte[] decodeBase64(String data) {
+        byte[] decoded = Base64.getDecoder().decode(data);
         logger.debug("Decoded Base64 string to " + decoded.length + " bytes");
         return decoded;
     }
@@ -48,14 +35,14 @@ public class EncodingUtil {
     /**
      * Encode a string to Base64.
      */
-    public static String encodeString(String text) throws Exception {
+    public static String encodeString(String text) {
         return encodeBase64(text.getBytes());
     }
 
     /**
      * Decode a Base64 string.
      */
-    public static String decodeString(String base64) throws Exception {
+    public static String decodeString(String base64) {
         return new String(decodeBase64(base64));
     }
 }

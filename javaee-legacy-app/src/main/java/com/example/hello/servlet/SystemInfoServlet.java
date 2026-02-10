@@ -4,11 +4,11 @@ import java.io.IOException;
 import java.io.PrintWriter;
 import java.util.Date;
 
-import javax.servlet.ServletException;
-import javax.servlet.annotation.WebServlet;
-import javax.servlet.http.HttpServlet;
-import javax.servlet.http.HttpServletRequest;
-import javax.servlet.http.HttpServletResponse;
+import jakarta.servlet.ServletException;
+import jakarta.servlet.annotation.WebServlet;
+import jakarta.servlet.http.HttpServlet;
+import jakarta.servlet.http.HttpServletRequest;
+import jakarta.servlet.http.HttpServletResponse;
 
 import com.example.hello.util.DateUtil;
 import com.example.hello.util.EncodingUtil;
@@ -16,7 +16,8 @@ import com.example.hello.util.ScriptUtil;
 import com.example.hello.util.SecurityUtil;
 import com.example.hello.util.XmlUtil;
 import com.example.hello.util.XmlUtil.UserXml;
-import org.apache.log4j.Logger;
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
 
 /**
  * System info servlet that exercises various deprecated/removed Java APIs.
@@ -25,7 +26,7 @@ import org.apache.log4j.Logger;
 @WebServlet(urlPatterns = {"/sysinfo"})
 public class SystemInfoServlet extends HttpServlet {
 
-    private static final Logger logger = Logger.getLogger(SystemInfoServlet.class);
+    private static final Logger logger = LogManager.getLogger(SystemInfoServlet.class);
 
     @Override
     protected void doGet(HttpServletRequest request, HttpServletResponse response)
@@ -97,12 +98,11 @@ public class SystemInfoServlet extends HttpServlet {
         }
 
         // --- SecurityManager (removed in Java 24) ---
-        out.println("<h2>SecurityManager</h2>");
+        out.println("<h2>SecurityManager (Removed)</h2>");
         try {
-            boolean smEnabled = SecurityUtil.isSecurityManagerEnabled();
             boolean canRead = SecurityUtil.canReadFile("/etc/passwd");
-            out.println("<pre>SecurityManager enabled: " + smEnabled + "\nCan read /etc/passwd: " + canRead + "</pre>");
-            out.println("<p class='warn'>&#9888; Uses SecurityManager (removed in Java 24, JEP 486)</p>");
+            out.println("<pre>SecurityManager API has been removed in Java 24 (JEP 486)\nFile read check (using Files.isReadable): " + canRead + "</pre>");
+            out.println("<p class='info'>&#9989; SecurityManager APIs removed and replaced with modern alternatives</p>");
         } catch (Throwable e) {
             out.println("<p class='err'>&#10060; " + e.getClass().getName() + ": " + e.getMessage() + "</p>");
         }

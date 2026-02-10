@@ -2,20 +2,22 @@ package com.example.hello.util;
 
 import java.io.IOException;
 
-import org.apache.http.client.methods.CloseableHttpResponse;
-import org.apache.http.client.methods.HttpGet;
-import org.apache.http.impl.client.CloseableHttpClient;
-import org.apache.http.impl.client.HttpClients;
-import org.apache.http.util.EntityUtils;
-import org.apache.log4j.Logger;
+import org.apache.hc.client5.http.classic.methods.HttpGet;
+import org.apache.hc.client5.http.impl.classic.CloseableHttpClient;
+import org.apache.hc.client5.http.impl.classic.CloseableHttpResponse;
+import org.apache.hc.client5.http.impl.classic.HttpClients;
+import org.apache.hc.core5.http.ParseException;
+import org.apache.hc.core5.http.io.entity.EntityUtils;
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
 
 /**
- * HTTP client utility using vulnerable Apache HttpClient 4.5.2.
- * CVE-2020-13956: Incorrect handling of malformed authority in URIs.
+ * HTTP client utility using Apache HttpClient 5.x (updated from vulnerable 4.5.2).
+ * CVE-2020-13956 fixed in version 5.x.
  */
 public class HttpClientUtil {
 
-    private static final Logger logger = Logger.getLogger(HttpClientUtil.class);
+    private static final Logger logger = LogManager.getLogger(HttpClientUtil.class);
 
     /**
      * Performs a simple HTTP GET request.
@@ -23,19 +25,16 @@ public class HttpClientUtil {
     public static String get(String url) throws IOException {
         logger.info("HTTP GET: " + url);
 
-        CloseableHttpClient httpClient = HttpClients.createDefault();
-        try {
+        try (CloseableHttpClient httpClient = HttpClients.createDefault()) {
             HttpGet request = new HttpGet(url);
-            CloseableHttpResponse response = httpClient.execute(request);
-            try {
+            try (CloseableHttpResponse response = httpClient.execute(request)) {
                 String body = EntityUtils.toString(response.getEntity());
-                logger.info("Response status: " + response.getStatusLine().getStatusCode());
+                logger.info("Response status: " + response.getCode());
                 return body;
-            } finally {
-                response.close();
+            } catch (ParseException e) {
+                logger.error("Failed to parse HTTP response", e);
+                throw new IOException("Failed to parse HTTP response", e);
             }
-        } finally {
-            httpClient.close();
         }
     }
 }

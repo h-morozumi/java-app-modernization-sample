@@ -6,7 +6,8 @@ import java.util.Calendar;
 import java.util.Date;
 import java.util.TimeZone;
 
-import org.apache.log4j.Logger;
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
 
 /**
  * Date utility using legacy java.util.Date and SimpleDateFormat.
@@ -18,7 +19,7 @@ import org.apache.log4j.Logger;
  */
 public class DateUtil {
 
-    private static final Logger logger = Logger.getLogger(DateUtil.class);
+    private static final Logger logger = LogManager.getLogger(DateUtil.class);
 
     // SimpleDateFormat is NOT thread-safe (common Java 8 era mistake)
     private static final SimpleDateFormat DATE_FORMAT = new SimpleDateFormat("yyyy-MM-dd");

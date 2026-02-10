@@ -7,14 +7,15 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
-import javax.servlet.ServletException;
-import javax.servlet.annotation.WebServlet;
-import javax.servlet.http.HttpServlet;
-import javax.servlet.http.HttpServletRequest;
-import javax.servlet.http.HttpServletResponse;
+import jakarta.servlet.ServletException;
+import jakarta.servlet.annotation.WebServlet;
+import jakarta.servlet.http.HttpServlet;
+import jakarta.servlet.http.HttpServletRequest;
+import jakarta.servlet.http.HttpServletResponse;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
-import org.apache.log4j.Logger;
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
 
 /**
  * REST-like API servlet that returns user list as JSON.
@@ -23,7 +24,7 @@ import org.apache.log4j.Logger;
 @WebServlet(urlPatterns = {"/api/users"})
 public class UserApiServlet extends HttpServlet {
 
-    private static final Logger logger = Logger.getLogger(UserApiServlet.class);
+    private static final Logger logger = LogManager.getLogger(UserApiServlet.class);
     private final ObjectMapper objectMapper = new ObjectMapper();
 
     @Override

@@ -1,17 +1,18 @@
 package com.example.hello.util;
 
-import javax.xml.bind.DatatypeConverter;
-import javax.xml.bind.JAXBContext;
-import javax.xml.bind.JAXBException;
-import javax.xml.bind.Marshaller;
-import javax.xml.bind.Unmarshaller;
-import javax.xml.bind.annotation.XmlElement;
-import javax.xml.bind.annotation.XmlRootElement;
+import jakarta.xml.bind.DatatypeConverter;
+import jakarta.xml.bind.JAXBContext;
+import jakarta.xml.bind.JAXBException;
+import jakarta.xml.bind.Marshaller;
+import jakarta.xml.bind.Unmarshaller;
+import jakarta.xml.bind.annotation.XmlElement;
+import jakarta.xml.bind.annotation.XmlRootElement;
 
 import java.io.StringReader;
 import java.io.StringWriter;
 
-import org.apache.log4j.Logger;
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
 
 /**
  * XML utility using javax.xml.bind (JAXB).
@@ -20,7 +21,7 @@ import org.apache.log4j.Logger;
  */
 public class XmlUtil {
 
-    private static final Logger logger = Logger.getLogger(XmlUtil.class);
+    private static final Logger logger = LogManager.getLogger(XmlUtil.class);
 
     /**
      * Simple user model for XML serialization.
@@ -57,22 +58,16 @@ public class XmlUtil {
      * Uses context classloader trick to access JDK-internal JAXB in embedded Tomcat.
      */
     public static String toXml(Object obj) throws JAXBException {
-        ClassLoader original = Thread.currentThread().getContextClassLoader();
-        try {
-            Thread.currentThread().setContextClassLoader(ClassLoader.getSystemClassLoader());
-            JAXBContext context = JAXBContext.newInstance(obj.getClass());
-            Marshaller marshaller = context.createMarshaller();
-            marshaller.setProperty(Marshaller.JAXB_FORMATTED_OUTPUT, Boolean.TRUE);
+        JAXBContext context = JAXBContext.newInstance(obj.getClass());
+        Marshaller marshaller = context.createMarshaller();
+        marshaller.setProperty(Marshaller.JAXB_FORMATTED_OUTPUT, Boolean.TRUE);
 
-            StringWriter writer = new StringWriter();
-            marshaller.marshal(obj, writer);
+        StringWriter writer = new StringWriter();
+        marshaller.marshal(obj, writer);
 
-            String xml = writer.toString();
-            logger.debug("Marshalled object to XML: " + xml.length() + " chars");
-            return xml;
-        } finally {
-            Thread.currentThread().setContextClassLoader(original);
-        }
+        String xml = writer.toString();
+        logger.debug("Marshalled object to XML: " + xml.length() + " chars");
+        return xml;
     }
 
     /**
@@ -80,19 +75,13 @@ public class XmlUtil {
      */
     @SuppressWarnings("unchecked")
     public static <T> T fromXml(String xml, Class<T> clazz) throws JAXBException {
-        ClassLoader original = Thread.currentThread().getContextClassLoader();
-        try {
-            Thread.currentThread().setContextClassLoader(ClassLoader.getSystemClassLoader());
-            JAXBContext context = JAXBContext.newInstance(clazz);
-            Unmarshaller unmarshaller = context.createUnmarshaller();
+        JAXBContext context = JAXBContext.newInstance(clazz);
+        Unmarshaller unmarshaller = context.createUnmarshaller();
 
-            StringReader reader = new StringReader(xml);
-            T obj = (T) unmarshaller.unmarshal(reader);
-            logger.debug("Unmarshalled XML to " + clazz.getSimpleName());
-            return obj;
-        } finally {
-            Thread.currentThread().setContextClassLoader(original);
-        }
+        StringReader reader = new StringReader(xml);
+        T obj = (T) unmarshaller.unmarshal(reader);
+        logger.debug("Unmarshalled XML to " + clazz.getSimpleName());
+        return obj;
     }
 
     /**

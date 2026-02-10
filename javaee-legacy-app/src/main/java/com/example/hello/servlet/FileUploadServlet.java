@@ -2,27 +2,28 @@ package com.example.hello.servlet;
 
 import java.io.IOException;
 import java.io.PrintWriter;
-import java.util.List;
+import java.util.Collection;
 
-import javax.servlet.ServletException;
-import javax.servlet.annotation.WebServlet;
-import javax.servlet.http.HttpServlet;
-import javax.servlet.http.HttpServletRequest;
-import javax.servlet.http.HttpServletResponse;
+import jakarta.servlet.ServletException;
+import jakarta.servlet.annotation.MultipartConfig;
+import jakarta.servlet.annotation.WebServlet;
+import jakarta.servlet.http.HttpServlet;
+import jakarta.servlet.http.HttpServletRequest;
+import jakarta.servlet.http.HttpServletResponse;
+import jakarta.servlet.http.Part;
 
-import org.apache.commons.fileupload.FileItem;
-import org.apache.commons.fileupload.disk.DiskFileItemFactory;
-import org.apache.commons.fileupload.servlet.ServletFileUpload;
-import org.apache.log4j.Logger;
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
 
 /**
- * File upload servlet using vulnerable Commons FileUpload 1.3.1.
- * CVE-2016-1000031: DiskFileItem class can be exploited for RCE.
+ * File upload servlet using built-in Jakarta Servlet 6.0 multipart support (replaces vulnerable Commons FileUpload 1.3.1).
+ * CVE-2016-1000031 no longer applicable as we're using built-in Jakarta Servlet API.
  */
 @WebServlet(urlPatterns = {"/upload"})
+@MultipartConfig(maxFileSize = 1024 * 1024 * 10) // 10MB max
 public class FileUploadServlet extends HttpServlet {
 
-    private static final Logger logger = Logger.getLogger(FileUploadServlet.class);
+    private static final Logger logger = LogManager.getLogger(FileUploadServlet.class);
 
     @Override
     protected void doGet(HttpServletRequest request, HttpServletResponse response)
@@ -39,25 +40,16 @@ public class FileUploadServlet extends HttpServlet {
         response.setContentType("text/html; charset=UTF-8");
         PrintWriter out = response.getWriter();
 
-        if (!ServletFileUpload.isMultipartContent(request)) {
-            out.println("<html><body><p>No file uploaded.</p></body></html>");
-            return;
-        }
-
         try {
-            DiskFileItemFactory factory = new DiskFileItemFactory();
-            ServletFileUpload upload = new ServletFileUpload(factory);
-            upload.setSizeMax(1024 * 1024 * 10); // 10MB max
-
-            List<FileItem> items = upload.parseRequest(request);
+            Collection<Part> parts = request.getParts();
 
             out.println("<html><body>");
             out.println("<h2>Upload Result</h2>");
 
-            for (FileItem item : items) {
-                if (!item.isFormField()) {
-                    logger.info("Uploaded file: " + item.getName() + " (" + item.getSize() + " bytes)");
-                    out.println("<p>File: " + item.getName() + " (" + item.getSize() + " bytes)</p>");
+            for (Part part : parts) {
+                if (part.getSubmittedFileName() != null && !part.getSubmittedFileName().isEmpty()) {
+                    logger.info("Uploaded file: " + part.getSubmittedFileName() + " (" + part.getSize() + " bytes)");
+                    out.println("<p>File: " + part.getSubmittedFileName() + " (" + part.getSize() + " bytes)</p>");
                 }
             }
 
